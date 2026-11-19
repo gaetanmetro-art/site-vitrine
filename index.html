@@ -359,23 +359,16 @@
 
                             <!-- Panneau de confirmation interactif -->
                             <div id="form-success" class="hidden space-y-5">
-                                <div class="p-5 rounded-xl bg-[#162a1c]/5 border border-[#162a1c]/20 space-y-2">
-                                    <p class="font-bold text-lg text-[#162a1c]">Votre demande est prête à être transmise</p>
+                                <div class="p-6 rounded-xl bg-[#162a1c]/5 border border-[#162a1c]/20 space-y-2">
+                                    <p class="font-bold text-lg text-[#162a1c]">Demande envoyée avec succès</p>
                                     <p class="text-sm text-[#162a1c]/80">
-                                        Cliquez ci-dessous pour ouvrir votre messagerie avec les informations pré-remplies à destination de <strong>gaetan.metro@pace-print.fr</strong>.
+                                        Merci pour votre message. Nous avons bien reçu votre demande et reviendrons vers vous rapidement.
                                     </p>
                                 </div>
 
-                                <div id="summary-box" class="p-4 rounded-xl border border-[#162a1c]/15 text-sm text-[#162a1c] space-y-1.5 bg-white"></div>
-
-                                <div class="flex flex-col sm:flex-row gap-3">
-                                    <a id="mailto-link" href="mailto:gaetan.metro@pace-print.fr" class="flex-1 text-center py-3.5 px-5 rounded-xl bg-[#162a1c] text-white font-semibold text-sm hover:bg-[#162a1c]/90 transition-colors">
-                                        Ouvrir dans mon logiciel mail
-                                    </a>
-                                    <button type="button" id="reset-form-btn" class="py-3.5 px-5 rounded-xl border border-[#162a1c]/25 text-[#162a1c] font-medium text-sm hover:bg-[#162a1c]/5 transition-colors cursor-pointer">
-                                        Nouvelle demande
-                                    </button>
-                                </div>
+                                <button type="button" id="reset-form-btn" class="w-full py-3.5 px-5 rounded-xl border border-[#162a1c]/25 text-[#162a1c] font-medium text-sm hover:bg-[#162a1c]/5 transition-colors cursor-pointer">
+                                    Envoyer une autre demande
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -417,16 +410,16 @@
             link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
         });
 
-        // Formulaire de contact
+        // Formulaire de contact via Web3Forms
         const contactForm = document.getElementById('contact-form');
         const formError = document.getElementById('form-error');
         const formSuccess = document.getElementById('form-success');
-        const summaryBox = document.getElementById('summary-box');
-        const mailtoLink = document.getElementById('mailto-link');
+        const submitBtn = document.getElementById('submit-btn');
         const resetFormBtn = document.getElementById('reset-form-btn');
 
-        contactForm.addEventListener('submit', function(e) {
+        contactForm.addEventListener('submit', async function(e) {
             e.preventDefault();
+            
             const name = document.getElementById('name').value.trim();
             const profile = document.getElementById('profile').value;
             const email = document.getElementById('email').value.trim();
@@ -434,41 +427,56 @@
             const message = document.getElementById('message').value.trim();
 
             if (!name && !email) {
+                formError.textContent = "Merci de renseigner au moins votre nom ou votre adresse e-mail.";
                 formError.classList.remove('hidden');
                 return;
             }
             formError.classList.add('hidden');
 
-            summaryBox.innerHTML = `
-                <p><strong>Nom / Structure :</strong> ${name || 'Non renseigné'}</p>
-                <p><strong>Profil :</strong> ${profile}</p>
-                <p><strong>E-mail :</strong> ${email || 'Non renseigné'}</p>
-                <p><strong>Téléphone :</strong> ${phone || 'Non renseigné'}</p>
-                <p><strong>Message :</strong> ${message || 'Aucun message complémentaire'}</p>
-            `;
+            // État de chargement sur le bouton
+            const originalBtnText = submitBtn.textContent;
+            submitBtn.textContent = "Envoi en cours...";
+            submitBtn.disabled = true;
 
-            const subject = encodeURIComponent(`Demande d'information Pace Print - ${name || profile}`);
-            const body = encodeURIComponent(
-                `Bonjour Gaëtan,
+            // Préparation des données pour Web3Forms
+            const payload = {
+                access_key: "34f5a372-87bb-4263-b963-f2fd81bd9947",
+                subject: `Nouvelle demande Pace Print - ${name || profile}`,
+                from_name: "Site Pace Print",
+                replyto: email || undefined, // Permet de répondre directement au prospect depuis Gmail
+                Nom_Structure: name || "Non renseigné",
+                Profil: profile,
+                Email: email || "Non renseigné",
+                Telephone: phone || "Non renseigné",
+                Message: message || "Aucun message complémentaire"
+            };
 
-` +
-                `Nom / Structure : ${name || 'Non renseigné'}
-` +
-                `Profil : ${profile}
-` +
-                `E-mail : ${email || 'Non renseigné'}
-` +
-                `Téléphone : ${phone || 'Non renseigné'}
+            try {
+                const response = await fetch("https://api.web3forms.com/submit", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify(payload)
+                });
 
-` +
-                `Projet / Question :
-${message || 'Souhaite échanger sur le déploiement de la borne Pace Print.'}
-`
-            );
+                const result = await response.json();
 
-            mailtoLink.href = `mailto:gaetan.metro@pace-print.fr?subject=${subject}&body=${body}`;
-            contactForm.classList.add('hidden');
-            formSuccess.classList.remove('hidden');
+                if (result.success) {
+                    contactForm.classList.add('hidden');
+                    formSuccess.classList.remove('hidden');
+                } else {
+                    formError.textContent = "Une erreur est survenue lors de l'envoi. Vous pouvez nous écrire directement à gaetan.metro@pace-print.fr.";
+                    formError.classList.remove('hidden');
+                }
+            } catch (error) {
+                formError.textContent = "Impossible de contacter le serveur d'envoi. Vérifiez votre connexion internet.";
+                formError.classList.remove('hidden');
+            } finally {
+                submitBtn.textContent = originalBtnText;
+                submitBtn.disabled = false;
+            }
         });
 
         resetFormBtn.addEventListener('click', () => {
