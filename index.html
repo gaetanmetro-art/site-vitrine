@@ -167,7 +167,51 @@
                 </div>
             </div>
         </section>
+<div class="demo-cta">
+  <p><strong>Vous voulez tester l'interface de la borne ?</strong></p>
+  <button id="demo-open">Recevoir l'accès à la démo</button>
 
+  <form id="demo-form" hidden>
+    <input name="nom" placeholder="Nom" required>
+    <input name="structure" placeholder="Course / magasin / société">
+    <select name="profil">
+      <option>Organisateur de course</option><option>Enseigne de sport</option><option>Autre</option>
+    </select>
+    <input name="email" type="email" placeholder="Votre e-mail (pour recevoir le lien)" required>
+    <input name="tel" type="tel" placeholder="Téléphone (facultatif)">
+    <input name="website" tabindex="-1" autocomplete="off" style="display:none">
+    <label class="rgpd"><input type="checkbox" required>
+      J'accepte que Pace Print utilise ces informations pour m'envoyer l'accès à la démo et me recontacter.
+      Données conservées 3 ans max., suppression sur simple demande à contact@pace-print.fr.</label>
+    <button type="submit">Recevoir le lien par e-mail</button>
+  </form>
+  <p id="demo-ok" hidden>✅ C'est envoyé ! Consultez votre boîte mail (pensez aux spams).</p>
+</div>
+
+<style>
+  .demo-cta{max-width:480px;margin:2.5rem auto;text-align:center}
+  .demo-cta button{padding:.9rem 1.6rem;border:0;border-radius:999px;background:#111;color:#fff;font-weight:600;cursor:pointer}
+  #demo-form{display:grid;gap:.6rem;margin-top:1rem;text-align:left}
+  #demo-form[hidden]{display:none}
+  #demo-form input,#demo-form select{padding:.75rem;border:1px solid #ccc;border-radius:8px;font-size:1rem}
+  .rgpd{font-size:.8rem;color:#555}
+</style>
+
+<script>
+  const URL_SCRIPT = 'https://script.google.com/macros/s/AKfycbyhFo22XCNW9ni0DuyVn97qUM7Gf6apZCrE27vWs7GyfhT3Sq3xFqmKq5zhNKoArPy53g/exec';
+  document.getElementById('demo-open').onclick = (e) => {
+    e.target.hidden = true;
+    document.getElementById('demo-form').hidden = false;
+  };
+  document.getElementById('demo-form').onsubmit = async (e) => {
+    e.preventDefault();
+    const btn = e.target.querySelector('[type=submit]');
+    btn.disabled = true; btn.textContent = 'Envoi…';
+    await fetch(URL_SCRIPT, { method:'POST', body:new URLSearchParams(new FormData(e.target)), mode:'no-cors' });
+    e.target.hidden = true;
+    document.getElementById('demo-ok').hidden = false;
+  };
+</script>
         <!-- 4. ZONE DE PRÉSENTATION DES TYPES DE DÉPLOIEMENTS (#FFFFFF) -->
         <section id="implantation" class="bg-white text-[#162a1c] py-20 md:py-28 scroll-mt-20">
             <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
