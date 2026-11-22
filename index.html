@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Pace Print – site pace-print.fr – version 1.1.0 (historique : Google Sheet « Pace Print – Versions du site ») -->
 <html lang="fr" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
@@ -177,7 +178,7 @@
 
                     <form id="demo-form" class="hidden mt-6 space-y-4 text-left">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <input name="nom" required placeholder="Nom / Prénom" class="w-full px-4 py-3 rounded-xl bg-white text-[#162a1c] placeholder-[#162a1c]/50 border-0 focus:outline-none focus:ring-2 focus:ring-white/60">
+                            <input name="nom" required placeholder="Nom" class="w-full px-4 py-3 rounded-xl bg-white text-[#162a1c] placeholder-[#162a1c]/50 border-0 focus:outline-none focus:ring-2 focus:ring-white/60">
                             <input name="structure" placeholder="Course / magasin / société" class="w-full px-4 py-3 rounded-xl bg-white text-[#162a1c] placeholder-[#162a1c]/50 border-0 focus:outline-none focus:ring-2 focus:ring-white/60">
                         </div>
                         <select name="profil" class="w-full px-4 py-3 rounded-xl bg-white text-[#162a1c] border-0 focus:outline-none focus:ring-2 focus:ring-white/60">
@@ -197,6 +198,9 @@
                         <button type="submit" id="demo-submit" class="w-full py-3.5 px-6 rounded-full bg-white text-[#162a1c] font-semibold text-base hover:bg-white/90 transition-colors cursor-pointer disabled:opacity-70 disabled:cursor-wait">
                             Recevoir le lien par e-mail
                         </button>
+                        <p class="text-center text-xs text-white/60">
+                            <a href="mentions-legales.html#donnees" class="underline underline-offset-2 hover:text-white">Mentions légales et données personnelles</a>
+                        </p>
                     </form>
 
                     <div id="demo-ok" class="hidden mt-6 p-5 rounded-xl bg-white/10 text-white font-medium">
@@ -230,7 +234,7 @@
                             Sur le village de votre course
                         </h3>
                         <p class="text-base text-[#162a1c]/85 leading-relaxed mb-6">
-                            Déployée sur le village, la borne Pace print absorbe les pics d'affluence avant le départ et libère vos équipes bénévoles des tâches de distribution.
+                            Déployée sur le village, la borne Pace Print absorbe les pics d'affluence avant le départ et libère vos équipes bénévoles des tâches de distribution.
                         </p>
                         <ul class="space-y-3 text-sm sm:text-base font-medium text-[#162a1c]">
                             <li class="flex items-start gap-3">
@@ -397,6 +401,10 @@
                                 <button type="submit" id="submit-btn" class="w-full py-3.5 px-6 rounded-xl bg-[#162a1c] text-white font-semibold text-base hover:bg-[#162a1c]/90 transition-colors cursor-pointer">
                                     Envoyer ma demande
                                 </button>
+                                <p class="text-xs text-[#162a1c]/60 leading-relaxed">
+                                    Vos informations servent uniquement à répondre à votre demande et sont conservées 3 ans maximum.
+                                    <a href="mentions-legales.html#donnees" class="underline underline-offset-2 hover:text-[#162a1c]">Mentions légales et données personnelles</a>
+                                </p>
                             </form>
 
                             <!-- Panneau de confirmation interactif -->
@@ -435,7 +443,7 @@
                 </nav>
 
                 <p class="text-xs text-white/70">
-                    © 2026 Pace Print. Tous droits réservés.
+                    © 2026 Pace Print. Tous droits réservés. · <a href="mentions-legales.html" class="underline underline-offset-2 hover:text-white">Mentions légales</a>
                 </p>
             </div>
         </div>
@@ -461,7 +469,7 @@
 
         contactForm.addEventListener('submit', async function(e) {
             e.preventDefault();
-            
+
             const name = document.getElementById('name').value.trim();
             const profile = document.getElementById('profile').value;
             const email = document.getElementById('email').value.trim();
